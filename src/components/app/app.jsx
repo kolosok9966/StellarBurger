@@ -7,10 +7,13 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 import { Modal } from '@components/modal/modal';
 
 import { OrderDetails } from '../burger-constructor/order-details/order-details';
+import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 
 import styles from './app.module.css';
 
 export const App = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -19,9 +22,13 @@ export const App = () => {
   const [selectedIngredients, setSelectedIngredients] = useState([]);
 
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [currentIngredient, setCurrentIngredient] = useState(null);
 
   const openOrderModal = () => setIsOrderModalOpen(true);
   const closeOrderModal = () => setIsOrderModalOpen(false);
+
+  const openIngredientModal = (item) => setCurrentIngredient(item);
+  const closeIngredientModal = () => setCurrentIngredient(null);
 
   const handleSelectIngredient = (item) => {
     if (item.type === 'bun') {
@@ -63,7 +70,7 @@ export const App = () => {
     const fetchIngredients = async () => {
       try {
         setLoading(true);
-        const res = await fetch('https://norma.education-services.ru/api/ingredients');
+        const res = await fetch(`${API_BASE_URL}/ingredients`);
         if (!res.ok) throw new Error();
         const data = await res.json();
         const ingredientsList = data.data || [];
@@ -101,6 +108,7 @@ export const App = () => {
             <BurgerIngredients
               ingredients={ingredients}
               handleSelectIngredient={handleSelectIngredient}
+              handleOpenDetails={openIngredientModal}
             />
             <BurgerConstructor
               selectedBun={selectedBun}
@@ -111,9 +119,16 @@ export const App = () => {
           </>
         )}
       </main>
+
       {isOrderModalOpen && (
         <Modal handleClose={closeOrderModal}>
           <OrderDetails />
+        </Modal>
+      )}
+
+      {currentIngredient && (
+        <Modal title={'Детали ингредиента'} handleClose={closeIngredientModal}>
+          <IngredientDetails ingredient={currentIngredient} />
         </Modal>
       )}
     </div>

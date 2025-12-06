@@ -1,4 +1,5 @@
 import { CloseIcon } from '@krgaa/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -7,6 +8,12 @@ import ModalOverlay from '../modal/modal-overlay/modal-overlay';
 import styles from './modal.module.css';
 
 export const Modal = ({ title, handleClose, children }) => {
+  Modal.propTypes = {
+    title: PropTypes.string,
+    handleClose: PropTypes.func.isRequired,
+    children: PropTypes.node.isRequired,
+  };
+
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') handleClose();

@@ -4,6 +4,7 @@ import {
   CurrencyIcon,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 
 import styles from './burger-constructor.module.css';
 
@@ -13,6 +14,28 @@ export const BurgerConstructor = ({
   handleDeleteSelectIngredient,
   handleOrderClick,
 }) => {
+  BurgerConstructor.propTypes = {
+    selectedBun: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bun']).isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+    }),
+    selectedIngredients: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['main', 'sauce']).isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        uid: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    handleDeleteSelectIngredient: PropTypes.func.isRequired,
+    handleOrderClick: PropTypes.func.isRequired,
+  };
+
   // ---- Общая стоимость ----
   const totalPrice =
     (selectedBun ? selectedBun.price * 2 : 0) +
@@ -36,9 +59,8 @@ export const BurgerConstructor = ({
           {/*  Начинки  */}
           <div className={styles.items}>
             {selectedIngredients.map((item, idx) => (
-              <div key={idx}>
+              <div key={idx} className={styles.item}>
                 <DragIcon type="primary" />
-
                 <ConstructorElement
                   text={item.name}
                   price={item.price}
