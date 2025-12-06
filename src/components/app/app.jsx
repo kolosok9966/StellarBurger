@@ -1,6 +1,7 @@
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 
+import { request } from '@/utils/request';
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
@@ -12,8 +13,6 @@ import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingr
 import styles from './app.module.css';
 
 export const App = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -70,9 +69,7 @@ export const App = () => {
     const fetchIngredients = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/ingredients`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
+        const data = await request('/ingredients');
         const ingredientsList = data.data || [];
         setIngredients(ingredientsList);
         const defaultBun = ingredientsList.find((item) => item.type === 'bun');
