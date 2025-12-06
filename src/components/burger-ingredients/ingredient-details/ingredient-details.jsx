@@ -1,7 +1,11 @@
+import { IngredientType } from '@utils/types';
+
 import styles from './ingredient-details.module.css';
 
 export const IngredientDetails = ({ ingredient }) => {
-  if (!ingredient) return null;
+  IngredientDetails.propTypes = {
+    ingredient: IngredientType.isRequired,
+  };
 
   return (
     <div className={styles.wrapper}>

@@ -2,6 +2,8 @@ import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useMemo, useRef, useState, useEffect } from 'react';
 
+import { IngredientType } from '@utils/types';
+
 import { BurgerIngredientCard } from './burger-ingredient-card/burger-ingredient-card';
 
 import styles from './burger-ingredients.module.css';
@@ -12,22 +14,7 @@ export const BurgerIngredients = ({
   handleOpenDetails,
 }) => {
   BurgerIngredients.propTypes = {
-    ingredients: PropTypes.arrayOf(
-      PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bun', 'main', 'sauce']).isRequired,
-        proteins: PropTypes.number.isRequired,
-        fat: PropTypes.number.isRequired,
-        carbohydrates: PropTypes.number.isRequired,
-        calories: PropTypes.number.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
-        image_mobile: PropTypes.string.isRequired,
-        image_large: PropTypes.string.isRequired,
-        count: PropTypes.number,
-      })
-    ).isRequired,
+    ingredients: PropTypes.arrayOf(IngredientType).isRequired,
     handleSelectIngredient: PropTypes.func.isRequired,
     handleOpenDetails: PropTypes.func.isRequired,
   };

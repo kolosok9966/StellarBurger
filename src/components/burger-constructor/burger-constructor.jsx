@@ -6,6 +6,8 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 
+import { IngredientType } from '@utils/types';
+
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = ({
@@ -15,20 +17,10 @@ export const BurgerConstructor = ({
   handleOrderClick,
 }) => {
   BurgerConstructor.propTypes = {
-    selectedBun: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bun']).isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired,
-    }),
+    selectedBun: IngredientType,
     selectedIngredients: PropTypes.arrayOf(
       PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['main', 'sauce']).isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
+        ...IngredientType.type,
         uid: PropTypes.string.isRequired,
       })
     ).isRequired,

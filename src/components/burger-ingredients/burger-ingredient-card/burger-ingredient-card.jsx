@@ -1,18 +1,13 @@
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 
+import { IngredientType } from '@utils/types';
+
 import styles from './burger-ingredient-card.module.css';
 
 export const BurgerIngredientCard = ({ item, handleSelect, handleOpenDetails }) => {
   BurgerIngredientCard.propTypes = {
-    item: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bun', 'main', 'sauce']).isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired,
-      count: PropTypes.number,
-    }).isRequired,
+    item: IngredientType.isRequired,
     handleSelect: PropTypes.func.isRequired,
     handleOpenDetails: PropTypes.func.isRequired,
   };
