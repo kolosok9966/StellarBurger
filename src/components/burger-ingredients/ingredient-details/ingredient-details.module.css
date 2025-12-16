@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  width: 520px;
+  height: 240px;
+  object-fit: contain;
+}
+
+.infoList {
+  display: flex;
+  gap: 20px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 24px;
+}
