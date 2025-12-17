@@ -1,0 +1,42 @@
+// services/store/slices/constructorSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+export const burgerConstructorSlice = createSlice({
+  name: 'burgerConstructor',
+  initialState: {
+    selectedBun: null,
+    selectedIngredients: [],
+  },
+  selectors: {
+    getSelectedBun: (state) => state.selectedBun,
+    getSelectedIngredients: (state) => state.selectedIngredients,
+  },
+  reducers: {
+    addSelectedIngredient(state, action) {
+      const ingredient = action.payload;
+      if (ingredient.type === 'bun') {
+        state.selectedBun = ingredient;
+      } else {
+        state.selectedIngredients.push({ ...ingredient, uid: crypto.randomUUID() });
+      }
+    },
+    removeSelectedIngredient(state, action) {
+      const ingredient = action.payload;
+      state.selectedIngredients = state.selectedIngredients.filter(
+        (i) => i.uid !== ingredient.uid
+      );
+    },
+    clearBurgerConstructor(state) {
+      state.selectedBun = null;
+      state.selectedIngredients = [];
+    },
+  },
+});
+
+export const { getSelectedBun, getSelectedIngredients } =
+  burgerConstructorSlice.selectors;
+export const {
+  addSelectedIngredient,
+  removeSelectedIngredient,
+  clearBurgerConstructor,
+} = burgerConstructorSlice.actions;

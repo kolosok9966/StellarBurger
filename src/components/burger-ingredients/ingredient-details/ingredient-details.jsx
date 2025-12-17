@@ -1,17 +1,21 @@
-import { IngredientType } from '@utils/types';
+import { useSelector } from 'react-redux';
+
+import { getCurrentIngredient } from '@/services/current-ingredient/reducer';
 
 import styles from './ingredient-details.module.css';
 
-export const IngredientDetails = ({ ingredient }) => {
-  IngredientDetails.propTypes = {
-    ingredient: IngredientType.isRequired,
-  };
+export const IngredientDetails = () => {
+  const currentIngredient = useSelector(getCurrentIngredient);
 
   return (
     <div className={styles.wrapper}>
-      <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
+      <img
+        className={styles.image}
+        src={currentIngredient.image_large}
+        alt={currentIngredient.name}
+      />
 
-      <p className="text text_type_main-medium mt-4 mb-8">{ingredient.name}</p>
+      <p className="text text_type_main-medium mt-4 mb-8">{currentIngredient.name}</p>
 
       <ul className={styles.infoList}>
         <li className={styles.infoItem}>
@@ -19,28 +23,28 @@ export const IngredientDetails = ({ ingredient }) => {
             Калории, ккал
           </p>
           <p className="text text_type_digits-default text_color_inactive">
-            {ingredient.calories}
+            {currentIngredient.calories}
           </p>
         </li>
 
         <li className={styles.infoItem}>
           <p className="text text_type_main-default text_color_inactive">Белки, г</p>
           <p className="text text_type_digits-default text_color_inactive">
-            {ingredient.proteins}
+            {currentIngredient.proteins}
           </p>
         </li>
 
         <li className={styles.infoItem}>
           <p className="text text_type_main-default text_color_inactive">Жиры, г</p>
           <p className="text text_type_digits-default text_color_inactive">
-            {ingredient.fat}
+            {currentIngredient.fat}
           </p>
         </li>
 
         <li className={styles.infoItem}>
           <p className="text text_type_main-default text_color_inactive">Углеводы, г</p>
           <p className="text text_type_digits-default text_color_inactive">
-            {ingredient.carbohydrates}
+            {currentIngredient.carbohydrates}
           </p>
         </li>
       </ul>

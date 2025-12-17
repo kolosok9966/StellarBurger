@@ -1,39 +1,27 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import { IngredientType } from '@utils/types';
+import {
+  getIngredientsBuns,
+  getIngredientsMains,
+  getIngredientsSauces,
+} from '@/services/ingredients/reducer';
 
 import { BurgerIngredientCard } from './burger-ingredient-card/burger-ingredient-card';
 
 import styles from './burger-ingredients.module.css';
 
-export const BurgerIngredients = ({
-  ingredients,
-  handleSelectIngredient,
-  handleOpenDetails,
-}) => {
-  BurgerIngredients.propTypes = {
-    ingredients: PropTypes.arrayOf(IngredientType).isRequired,
-    handleSelectIngredient: PropTypes.func.isRequired,
-    handleOpenDetails: PropTypes.func.isRequired,
-  };
+export const BurgerIngredients = () => {
+  const buns = useSelector(getIngredientsBuns);
+  const mains = useSelector(getIngredientsMains);
+  const sauces = useSelector(getIngredientsSauces);
 
   const [current, setCurrent] = useState('bun');
-
   const containerRef = useRef(null);
   const bunRef = useRef(null);
   const mainRef = useRef(null);
   const sauceRef = useRef(null);
-
-  const groups = useMemo(
-    () => ({
-      bun: ingredients.filter((i) => i.type === 'bun'),
-      main: ingredients.filter((i) => i.type === 'main'),
-      sauce: ingredients.filter((i) => i.type === 'sauce'),
-    }),
-    [ingredients]
-  );
 
   // 👉 Скролл при клике по табу
   const handleTabClick = (tab) => {
@@ -106,13 +94,8 @@ export const BurgerIngredients = ({
         <div ref={bunRef} className={styles.section}>
           <h2 className="text text_type_main-medium">Булки</h2>
           <ul className={styles.grid}>
-            {groups.bun.map((item) => (
-              <BurgerIngredientCard
-                key={item._id}
-                item={item}
-                handleSelect={handleSelectIngredient}
-                handleOpenDetails={handleOpenDetails}
-              />
+            {buns.map((item) => (
+              <BurgerIngredientCard key={item._id} item={item} />
             ))}
           </ul>
         </div>
@@ -121,13 +104,8 @@ export const BurgerIngredients = ({
         <div ref={mainRef} className={styles.section}>
           <h2 className="text text_type_main-medium">Начинки</h2>
           <ul className={styles.grid}>
-            {groups.main.map((item) => (
-              <BurgerIngredientCard
-                key={item._id}
-                item={item}
-                handleSelect={handleSelectIngredient}
-                handleOpenDetails={handleOpenDetails}
-              />
+            {mains.map((item) => (
+              <BurgerIngredientCard key={item._id} item={item} />
             ))}
           </ul>
         </div>
@@ -136,13 +114,8 @@ export const BurgerIngredients = ({
         <div ref={sauceRef} className={styles.section}>
           <h2 className="text text_type_main-medium">Соусы</h2>
           <ul className={styles.grid}>
-            {groups.sauce.map((item) => (
-              <BurgerIngredientCard
-                key={item._id}
-                item={item}
-                handleSelect={handleSelectIngredient}
-                handleOpenDetails={handleOpenDetails}
-              />
+            {sauces.map((item) => (
+              <BurgerIngredientCard key={item._id} item={item} />
             ))}
           </ul>
         </div>

@@ -4,34 +4,45 @@ import {
   CurrencyIcon,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { IngredientType } from '@utils/types';
+import {
+  getSelectedBun,
+  getSelectedIngredients,
+  removeSelectedIngredient,
+} from '@/services/burger-constructor/reducer';
+import { decrementCount } from '@/services/ingredients/reducer';
+import { createOrder } from '@/services/order/actions';
 
 import styles from './burger-constructor.module.css';
 
-export const BurgerConstructor = ({
-  selectedBun,
-  selectedIngredients,
-  handleDeleteSelectIngredient,
-  handleOrderClick,
-}) => {
-  BurgerConstructor.propTypes = {
-    selectedBun: IngredientType,
-    selectedIngredients: PropTypes.arrayOf(
-      PropTypes.shape({
-        ...IngredientType.type,
-        uid: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    handleDeleteSelectIngredient: PropTypes.func.isRequired,
-    handleOrderClick: PropTypes.func.isRequired,
+export const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+
+  const selectedBun = useSelector(getSelectedBun);
+  const selectedIngredients = useSelector(getSelectedIngredients);
+
+  const totalPrice = useMemo(() => {
+    return (
+      (selectedBun ? selectedBun.price * 2 : 0) +
+      selectedIngredients.reduce((acc, item) => acc + item.price, 0)
+    );
+  }, [selectedBun, selectedIngredients]);
+
+  const handleDeleteSelectIngredient = (ingredient) => {
+    dispatch(removeSelectedIngredient(ingredient));
+    dispatch(decrementCount(ingredient));
   };
 
-  // ---- Общая стоимость ----
-  const totalPrice =
-    (selectedBun ? selectedBun.price * 2 : 0) +
-    selectedIngredients.reduce((acc, item) => acc + item.price, 0);
+  const handleOrderClick = () => {
+    const ingredientsIds = [
+      selectedBun._id,
+      ...selectedIngredients.map((item) => item._id),
+      selectedBun._id,
+    ];
+    dispatch(createOrder(ingredientsIds));
+  };
 
   return (
     <section className={styles.burger_constructor}>
