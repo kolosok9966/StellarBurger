@@ -45,6 +45,11 @@ export const ingredientsSlice = createSlice({
       const item = state.items.find((i) => i._id === ingredient._id);
       if (item) item.count -= 1;
     },
+    clearCounts(state) {
+      state.items.forEach((item) => {
+        item.count = 0;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,4 +77,4 @@ export const {
   getIngredientsMains,
   getIngredientsSauces,
 } = ingredientsSlice.selectors;
-export const { incrementCount, decrementCount } = ingredientsSlice.actions;
+export const { incrementCount, decrementCount, clearCounts } = ingredientsSlice.actions;

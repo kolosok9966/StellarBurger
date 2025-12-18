@@ -14,6 +14,7 @@ import {
 } from '@/services/burger-constructor/reducer';
 import { incrementCount } from '@/services/ingredients/reducer';
 import { createOrder } from '@/services/order/actions';
+import { getOrderError, getOrderLoading } from '@/services/order/reducer';
 import { DND_TYPES } from '@/utils/dnd-types';
 
 import { ConstructorIngredient } from './constructor-ingredient/constructor-ingredient';
@@ -66,8 +67,13 @@ export const BurgerConstructor = () => {
     );
   }, [selectedBun, selectedIngredients]);
 
+  const orderLoading = useSelector(getOrderLoading);
+  const orderError = useSelector(getOrderError);
+
+  const isOrderDisabled =
+    !selectedBun || selectedIngredients.length === 0 || orderLoading;
+
   const handleOrderClick = () => {
-    if (!selectedBun || selectedIngredients.length === 0) return;
     const ingredientsIds = [
       selectedBun._id,
       ...selectedIngredients.map((item) => item._id),
@@ -145,10 +151,24 @@ export const BurgerConstructor = () => {
           <span className="text text_type_digits-medium">{totalPrice}</span>
           <CurrencyIcon />
         </div>
-        <Button htmlType="button" type="primary" size="large" onClick={handleOrderClick}>
-          Оформить заказ
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={handleOrderClick}
+          disabled={isOrderDisabled}
+        >
+          {orderLoading ? 'Оформляем заказ…' : 'Оформить заказ'}
         </Button>
       </div>
+
+      {orderError && (
+        <div className={styles.error}>
+          <p className="text text_type_main-default text_color_error">
+            Не удалось оформить заказ. Попробуйте ещё раз.
+          </p>
+        </div>
+      )}
     </section>
   );
 };

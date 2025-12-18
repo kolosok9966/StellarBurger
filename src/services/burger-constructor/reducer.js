@@ -12,13 +12,23 @@ export const burgerConstructorSlice = createSlice({
     getSelectedIngredients: (state) => state.selectedIngredients,
   },
   reducers: {
-    addSelectedIngredient(state, action) {
-      const ingredient = action.payload;
-      if (ingredient.type === 'bun') {
-        state.selectedBun = ingredient;
-      } else {
-        state.selectedIngredients.push({ ...ingredient, uid: crypto.randomUUID() });
-      }
+    addSelectedIngredient: {
+      reducer(state, action) {
+        const ingredient = action.payload;
+        if (ingredient.type === 'bun') {
+          state.selectedBun = ingredient;
+        } else {
+          state.selectedIngredients.push(ingredient);
+        }
+      },
+      prepare(ingredient) {
+        return {
+          payload: {
+            ...ingredient,
+            uid: crypto.randomUUID(),
+          },
+        };
+      },
     },
     removeSelectedIngredient(state, action) {
       const ingredient = action.payload;

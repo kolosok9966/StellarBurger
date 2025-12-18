@@ -2,6 +2,7 @@ import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { clearBurgerConstructor } from '@/services/burger-constructor/reducer';
 import {
   clearCurrentIngredient,
   getCurrentIngredient,
@@ -10,6 +11,7 @@ import { fetchIngredients } from '@/services/ingredients/actions';
 import {
   getIngredientsLoading,
   getIngredientsError,
+  clearCounts,
 } from '@/services/ingredients/reducer';
 import { clearOrder, getOrderNumber } from '@/services/order/reducer';
 import { AppHeader } from '@components/app-header/app-header';
@@ -30,6 +32,12 @@ export const App = () => {
 
   const currentIngredient = useSelector(getCurrentIngredient);
   const orderNumber = useSelector(getOrderNumber);
+
+  const handleCloseModalWithClear = () => {
+    dispatch(clearOrder());
+    dispatch(clearBurgerConstructor());
+    dispatch(clearCounts());
+  };
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -58,7 +66,7 @@ export const App = () => {
       </main>
 
       {orderNumber && (
-        <Modal handleClose={() => dispatch(clearOrder())}>
+        <Modal handleClose={handleCloseModalWithClear}>
           <OrderDetails />
         </Modal>
       )}
