@@ -50,6 +50,7 @@ export const BurgerConstructor = () => {
     accept: DND_TYPES.INGREDIENT,
     canDrop: (item) => item.type !== 'bun',
     drop: (ingredient) => {
+      if (ingredient.index != null) return;
       dispatch(addSelectedIngredient(ingredient));
       dispatch(incrementCount(ingredient));
     },
@@ -100,10 +101,7 @@ export const BurgerConstructor = () => {
       )}
 
       {/*  Начинки  */}
-      <div
-        ref={!selectedIngredients.length ? ingredientsDropRef : null}
-        className={styles.items}
-      >
+      <div ref={ingredientsDropRef} className={styles.items}>
         {selectedIngredients.length > 0 ? (
           selectedIngredients.map((item, idx) => (
             <ConstructorIngredient key={item.uid} ingredient={item} index={idx} />

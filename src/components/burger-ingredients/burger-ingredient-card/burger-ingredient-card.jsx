@@ -18,7 +18,6 @@ export const BurgerIngredientCard = ({ item }) => {
     type: DND_TYPES.INGREDIENT,
     item: {
       ...item,
-      from: 'menu',
     },
   });
 

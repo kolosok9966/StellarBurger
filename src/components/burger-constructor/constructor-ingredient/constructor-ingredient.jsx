@@ -8,11 +8,10 @@ import { useDrag, useDrop } from 'react-dnd';
 import { useDispatch } from 'react-redux';
 
 import {
-  addSelectedIngredient,
   removeSelectedIngredient,
   reorderIngredients,
 } from '@/services/burger-constructor/reducer';
-import { decrementCount, incrementCount } from '@/services/ingredients/reducer';
+import { decrementCount } from '@/services/ingredients/reducer';
 import { DND_TYPES } from '@/utils/dnd-types';
 import { IngredientType } from '@/utils/types';
 
@@ -34,11 +33,9 @@ export const ConstructorIngredient = ({ ingredient, index }) => {
 
   const [, drop] = useDrop({
     accept: DND_TYPES.INGREDIENT,
-
     hover(item, monitor) {
       if (!ref.current) return;
-      if (item.from !== 'constructor') return;
-
+      if (item.index == null) return;
       const dragIndex = item.index;
       const hoverIndex = index;
 
@@ -56,12 +53,6 @@ export const ConstructorIngredient = ({ ingredient, index }) => {
       dispatch(reorderIngredients({ fromIndex: dragIndex, toIndex: hoverIndex }));
       item.index = hoverIndex;
     },
-
-    drop(item) {
-      if (item.from !== 'menu') return;
-      dispatch(addSelectedIngredient(item));
-      dispatch(incrementCount(item));
-    },
   });
 
   const [{ isDragging }, dragRef] = useDrag({
@@ -69,7 +60,6 @@ export const ConstructorIngredient = ({ ingredient, index }) => {
     item: {
       ...ingredient,
       index,
-      from: 'constructor',
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
