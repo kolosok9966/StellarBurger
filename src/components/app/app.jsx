@@ -1,7 +1,19 @@
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { request } from '@/utils/request';
+import { clearBurgerConstructor } from '@/services/burger-constructor/reducer';
+import {
+  clearCurrentIngredient,
+  getCurrentIngredient,
+} from '@/services/current-ingredient/reducer';
+import { fetchIngredients } from '@/services/ingredients/actions';
+import {
+  getIngredientsLoading,
+  getIngredientsError,
+  clearCounts,
+} from '@/services/ingredients/reducer';
+import { clearOrder, getOrderNumber } from '@/services/order/reducer';
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
@@ -13,78 +25,23 @@ import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingr
 import styles from './app.module.css';
 
 export const App = () => {
-  const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
 
-  const [selectedBun, setSelectedBun] = useState(null);
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const loading = useSelector(getIngredientsLoading);
+  const error = useSelector(getIngredientsError);
 
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [currentIngredient, setCurrentIngredient] = useState(null);
+  const currentIngredient = useSelector(getCurrentIngredient);
+  const orderNumber = useSelector(getOrderNumber);
 
-  const openOrderModal = () => setIsOrderModalOpen(true);
-  const closeOrderModal = () => setIsOrderModalOpen(false);
-
-  const openIngredientModal = (item) => setCurrentIngredient(item);
-  const closeIngredientModal = () => setCurrentIngredient(null);
-
-  const handleSelectIngredient = (item) => {
-    if (item.type === 'bun') {
-      setSelectedBun(item);
-    } else {
-      setSelectedIngredients((prev) => [...prev, { ...item, uid: crypto.randomUUID() }]);
-    }
-
-    setIngredients((prev) =>
-      prev.map((ing) => {
-        if (item.type === 'bun') {
-          if (ing.type === 'bun') {
-            return { ...ing, count: ing._id === item._id ? 2 : 0 };
-          }
-          return ing;
-        }
-        if (ing._id === item._id) {
-          return { ...ing, count: (ing.count || 0) + 1 };
-        }
-        return ing;
-      })
-    );
-  };
-
-  const handleDeleteSelectIngredient = (item) => {
-    setSelectedIngredients((prev) => prev.filter((ing) => ing.uid !== item.uid));
-
-    setIngredients((prev) =>
-      prev.map((ing) => {
-        if (ing._id === item._id) {
-          return { ...ing, count: ing.count - 1 };
-        }
-        return ing;
-      })
-    );
+  const handleCloseModalWithClear = () => {
+    dispatch(clearOrder());
+    dispatch(clearBurgerConstructor());
+    dispatch(clearCounts());
   };
 
   useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        setLoading(true);
-        const data = await request('/ingredients');
-        const ingredientsList = data.data || [];
-        setIngredients(ingredientsList);
-        const defaultBun = ingredientsList.find((item) => item.type === 'bun');
-        if (defaultBun) {
-          handleSelectIngredient(defaultBun);
-        } else throw new Error();
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchIngredients();
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -102,30 +59,24 @@ export const App = () => {
         )}
         {!loading && !error && (
           <>
-            <BurgerIngredients
-              ingredients={ingredients}
-              handleSelectIngredient={handleSelectIngredient}
-              handleOpenDetails={openIngredientModal}
-            />
-            <BurgerConstructor
-              selectedBun={selectedBun}
-              selectedIngredients={selectedIngredients}
-              handleDeleteSelectIngredient={handleDeleteSelectIngredient}
-              handleOrderClick={openOrderModal}
-            />
+            <BurgerIngredients />
+            <BurgerConstructor />
           </>
         )}
       </main>
 
-      {isOrderModalOpen && (
-        <Modal handleClose={closeOrderModal}>
+      {orderNumber && (
+        <Modal handleClose={handleCloseModalWithClear}>
           <OrderDetails />
         </Modal>
       )}
 
       {currentIngredient && (
-        <Modal title={'Детали ингредиента'} handleClose={closeIngredientModal}>
-          <IngredientDetails ingredient={currentIngredient} />
+        <Modal
+          title={'Детали ингредиента'}
+          handleClose={() => dispatch(clearCurrentIngredient())}
+        >
+          <IngredientDetails />
         </Modal>
       )}
     </div>
