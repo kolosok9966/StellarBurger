@@ -1,6 +1,5 @@
 import {
   ConstructorElement,
-  DragIcon,
   CurrencyIcon,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
@@ -12,11 +11,12 @@ import {
   addSelectedIngredient,
   getSelectedBun,
   getSelectedIngredients,
-  removeSelectedIngredient,
 } from '@/services/burger-constructor/reducer';
-import { decrementCount, incrementCount } from '@/services/ingredients/reducer';
+import { incrementCount } from '@/services/ingredients/reducer';
 import { createOrder } from '@/services/order/actions';
 import { DND_TYPES } from '@/utils/dnd-types';
+
+import { ConstructorIngredient } from './constructor-ingredient/constructor-ingredient';
 
 import styles from './burger-constructor.module.css';
 
@@ -26,7 +26,7 @@ export const BurgerConstructor = () => {
   const selectedBun = useSelector(getSelectedBun);
   const selectedIngredients = useSelector(getSelectedIngredients);
 
-  const useBunDrop = (dispatch) => {
+  const useBunDrop = () => {
     const [{ isHover }, dropRef] = useDrop({
       accept: DND_TYPES.INGREDIENT,
       canDrop: (item) => item.type === 'bun',
@@ -41,8 +41,8 @@ export const BurgerConstructor = () => {
     return [dropRef, isHover];
   };
 
-  const [topBunDropRef, isTopBunHover] = useBunDrop(dispatch);
-  const [bottomBunDropRef, isBottomBunHover] = useBunDrop(dispatch);
+  const [topBunDropRef, isTopBunHover] = useBunDrop();
+  const [bottomBunDropRef, isBottomBunHover] = useBunDrop();
 
   const isBunHover = isTopBunHover || isBottomBunHover;
 
@@ -64,11 +64,6 @@ export const BurgerConstructor = () => {
       selectedIngredients.reduce((acc, item) => acc + item.price, 0)
     );
   }, [selectedBun, selectedIngredients]);
-
-  const handleDeleteSelectIngredient = (ingredient) => {
-    dispatch(removeSelectedIngredient(ingredient));
-    dispatch(decrementCount(ingredient));
-  };
 
   const handleOrderClick = () => {
     if (!selectedBun || selectedIngredients.length === 0) return;
@@ -105,18 +100,13 @@ export const BurgerConstructor = () => {
       )}
 
       {/*  Начинки  */}
-      <div ref={ingredientsDropRef} className={styles.items}>
+      <div
+        ref={!selectedIngredients.length ? ingredientsDropRef : null}
+        className={styles.items}
+      >
         {selectedIngredients.length > 0 ? (
           selectedIngredients.map((item, idx) => (
-            <div key={idx} className={styles.item}>
-              <DragIcon type="primary" />
-              <ConstructorElement
-                text={item.name}
-                price={item.price}
-                thumbnail={item.image}
-                handleClose={() => handleDeleteSelectIngredient(item)}
-              />
-            </div>
+            <ConstructorIngredient key={item.uid} ingredient={item} index={idx} />
           ))
         ) : (
           <div

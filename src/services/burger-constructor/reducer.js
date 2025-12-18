@@ -26,6 +26,11 @@ export const burgerConstructorSlice = createSlice({
         (i) => i.uid !== ingredient.uid
       );
     },
+    reorderIngredients(state, action) {
+      const { fromIndex, toIndex } = action.payload;
+      const [movedIngredient] = state.selectedIngredients.splice(fromIndex, 1);
+      state.selectedIngredients.splice(toIndex, 0, movedIngredient);
+    },
     clearBurgerConstructor(state) {
       state.selectedBun = null;
       state.selectedIngredients = [];

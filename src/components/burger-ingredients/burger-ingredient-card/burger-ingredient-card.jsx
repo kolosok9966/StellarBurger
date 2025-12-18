@@ -16,7 +16,10 @@ export const BurgerIngredientCard = ({ item }) => {
 
   const [, dragRef] = useDrag({
     type: DND_TYPES.INGREDIENT,
-    item,
+    item: {
+      ...item,
+      from: 'menu',
+    },
   });
 
   return (
