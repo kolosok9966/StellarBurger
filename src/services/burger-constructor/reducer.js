@@ -39,4 +39,5 @@ export const {
   addSelectedIngredient,
   removeSelectedIngredient,
   clearBurgerConstructor,
+  reorderIngredients,
 } = burgerConstructorSlice.actions;
