@@ -10,19 +10,40 @@
   margin-left: 32px;
 }
 
+.placeholder {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 536px;
+  max-height: 80px;
+  margin-left: 32px;
+  padding: 16px 24px;
+  color: #f2f2f3;
+  font-size: 16px;
+  font-family: 'Jet Brains Mono', monospace;
+  line-height: 24px;
+  text-align: center;
+  background: #2f2f37;
+  border-radius: 88px;
+}
+
+.placeholder.top {
+  border-radius: 88px 88px 40px 40px;
+}
+
+.placeholder.bottom {
+  border-radius: 40px 40px 88px 88px;
+}
+
 .items {
   display: flex;
   flex-direction: column;
   gap: 16px;
   max-height: 420px;
   overflow-y: auto;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
 }
 
 .orderRow {
@@ -37,4 +58,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.hoverPlaceholder {
+  border: 2px dashed #801ab2;
+  box-shadow: 0 0 8px rgb(128 26 178 / 50%);
+}
+
+.error {
+  margin-top: 16px;
+  text-align: right;
 }

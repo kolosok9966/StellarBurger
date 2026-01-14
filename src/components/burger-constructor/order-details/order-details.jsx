@@ -1,13 +1,12 @@
 import { CheckMarkIcon } from '@krgaa/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+
+import { getOrderNumber } from '@/services/order/reducer';
 
 import styles from './order-details.module.css';
 
-export const OrderDetails = ({ orderNumber = 34536 }) => {
-  OrderDetails.propTypes = {
-    orderNumber: PropTypes.number,
-  };
-
+export const OrderDetails = () => {
+  const orderNumber = useSelector(getOrderNumber);
   const padded = orderNumber.toString().padStart(6, '0');
 
   return (
