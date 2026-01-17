@@ -25,6 +25,10 @@ export const ingredientsSlice = createSlice({
       (state) => state.items,
       (items) => items.filter((item) => item.type === 'sauce')
     ),
+    getIngredientById: createSelector(
+      [(state) => state.items, (_, id) => id],
+      (items, id) => items.find((item) => item._id === id)
+    ),
   },
   reducers: {
     incrementCount(state, action) {
@@ -76,5 +80,6 @@ export const {
   getIngredientsBuns,
   getIngredientsMains,
   getIngredientsSauces,
+  getIngredientById,
 } = ingredientsSlice.selectors;
 export const { incrementCount, decrementCount, clearCounts } = ingredientsSlice.actions;

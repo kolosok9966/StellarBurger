@@ -1,6 +1,7 @@
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
 import { useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { setCurrentIngredient } from '@/services/current-ingredient/reducer';
 import { DND_TYPES } from '@/utils/dnd-types';
@@ -13,6 +14,8 @@ export const BurgerIngredientCard = ({ item }) => {
     item: IngredientType.isRequired,
   };
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [, dragRef] = useDrag({
     type: DND_TYPES.INGREDIENT,
@@ -21,12 +24,13 @@ export const BurgerIngredientCard = ({ item }) => {
     },
   });
 
+  const handleClick = () => {
+    dispatch(setCurrentIngredient(item));
+    navigate(`/ingredients/${item._id}`, { state: { background: location } });
+  };
+
   return (
-    <div
-      ref={dragRef}
-      className={styles.card}
-      onClick={() => dispatch(setCurrentIngredient(item))}
-    >
+    <div ref={dragRef} className={styles.card} onClick={handleClick}>
       {item.count > 0 && (
         <div className={styles.counter}>
           <Counter count={item.count} size="default" />
