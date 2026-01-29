@@ -5,21 +5,23 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import { getUserData, getIsAuthChecked } from '@/services/user/reducer';
 
-export const ProtectedRoute = ({ element }) => {
-  ProtectedRoute.propTypes = {
-    element: PropTypes.node.isRequired,
-  };
+export const ProtectedRoute = ({ children, anonymous = false }) => {
   const user = useSelector(getUserData);
   const isAuthChecked = useSelector(getIsAuthChecked);
   const location = useLocation();
 
-  if (!isAuthChecked) {
-    return <Preloader />;
-  }
+  if (!isAuthChecked) return <Preloader />;
+  const from = location.state?.from || '/';
+  // Если разрешен неавторизованный доступ, а пользователь авторизован...
+  if (anonymous && user) return <Navigate to={from} replace />; // ...то отправляем его на предыдущую страницу
+  // Если требуется авторизация, а пользователь не авторизован...
+  if (!anonymous && !user)
+    return <Navigate to="/login" state={{ from: location }} replace />; // ...то отправляем его на страницу логин
 
-  if (user) {
-    return element;
-  }
+  return children;
+};
 
-  return <Navigate to="/login" state={{ from: location }} replace />;
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  anonymous: PropTypes.bool,
 };

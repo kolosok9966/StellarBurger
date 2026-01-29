@@ -46,7 +46,9 @@ export const AppHeader = () => {
         </div>
 
         <div className={styles.logo}>
-          <Logo />
+          <NavLink to="/" end>
+            <Logo />
+          </NavLink>
         </div>
 
         {/* Профиль */}

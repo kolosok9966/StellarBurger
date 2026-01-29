@@ -3,10 +3,10 @@ import {
   PasswordInput,
   Input,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 
+import { useForm } from '@hooks/useForm';
 import { resetPassword } from '@services/user/actions';
 import { getUserLoading } from '@services/user/reducer';
 
@@ -17,8 +17,7 @@ export const ResetPasswordPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLoading = useSelector(getUserLoading);
-  const [password, setPassword] = useState('');
-  const [code, setCode] = useState('');
+  const { values, handleChange } = useForm({ password: '', code: '' });
 
   if (!location.state?.fromForgot) {
     return <Navigate to="/forgot-password" replace />;
@@ -26,7 +25,7 @@ export const ResetPasswordPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(resetPassword({ password, token: code }))
+    dispatch(resetPassword({ password: values.password, token: values.code }))
       .unwrap()
       .then(() => {
         navigate('/login', { replace: true });
@@ -43,10 +42,10 @@ export const ResetPasswordPage = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className="mb-6">
           <PasswordInput
-            value={password}
+            value={values.password}
             name="password"
             placeholder="Введите новый пароль"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
@@ -54,9 +53,9 @@ export const ResetPasswordPage = () => {
           <Input
             type="text"
             placeholder="Введите код из письма"
-            value={code}
+            value={values.code}
             name="token"
-            onChange={(e) => setCode(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 

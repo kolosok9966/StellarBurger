@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useForm } from '@hooks/useForm';
 import { getUser, updateUser } from '@services/user/actions';
 import { getUserData, getUserLoading } from '@services/user/reducer';
 
@@ -17,67 +18,79 @@ export const ProfileForm = () => {
   const user = useSelector(getUserData);
   const isLoading = useSelector(getUserLoading);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange, setValues } = useForm({
+    name: '',
+    email: '',
+    password: '',
+  });
+
   const [initialData, setInitialData] = useState(null);
 
   const isEdited =
     initialData &&
-    (name !== initialData.name || email !== initialData.email || password);
+    (values.name !== initialData.name ||
+      values.email !== initialData.email ||
+      values.password);
 
   useEffect(() => {
     if (!user) {
       dispatch(getUser());
     } else {
-      setName(user.name);
-      setEmail(user.email);
-      setPassword('');
+      setValues({ name: user.name, email: user.email, password: '' });
       setInitialData({ name: user.name, email: user.email });
     }
   }, [dispatch, user]);
 
   const handleSave = (e) => {
     e.preventDefault();
-    dispatch(updateUser({ name, email, password: password || undefined }));
-    setPassword('');
+    dispatch(
+      updateUser({
+        name: values.name,
+        email: values.email,
+        password: values.password || undefined,
+      })
+    );
+    setValues({ ...values, password: '' });
   };
 
   const handleCancel = () => {
-    setName(initialData.name);
-    setEmail(initialData.email);
-    setPassword('');
+    setValues({
+      ...values,
+      name: initialData.name,
+      email: initialData.email,
+      password: '',
+    });
   };
 
   return (
     <form onSubmit={handleSave} className={styles.form}>
       <div className="mb-6">
         <Input
-          value={name}
+          value={values.name}
           name="name"
           placeholder="Имя"
           icon="EditIcon"
-          onChange={(e) => setName(e.target.value)}
+          onChange={handleChange}
         />
       </div>
 
       <div className="mb-6">
         <EmailInput
-          value={email}
+          value={values.email}
           name="email"
           placeholder="Логин"
           icon="EditIcon"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChange}
         />
       </div>
 
       <div className="mb-6">
         <PasswordInput
-          value={password}
+          value={values.password}
           name="password"
           placeholder="Пароль"
           icon="EditIcon"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChange}
         />
       </div>
 

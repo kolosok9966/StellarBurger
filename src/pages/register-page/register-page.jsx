@@ -4,10 +4,10 @@ import {
   PasswordInput,
   Input,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useForm } from '@hooks/useForm';
 import { registerUser } from '@services/user/actions';
 import { getUserLoading, getUserError } from '@services/user/reducer';
 
@@ -19,13 +19,17 @@ export const RegisterPage = () => {
   const error = useSelector(getUserError);
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange } = useForm({
+    name: '',
+    email: '',
+    password: '',
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerUser({ name, email, password }))
+    dispatch(
+      registerUser({ name: values.name, email: values.email, password: values.password })
+    )
       .unwrap()
       .then(() => {
         navigate('/', { replace: true });
@@ -44,28 +48,28 @@ export const RegisterPage = () => {
           <Input
             type="text"
             placeholder="Имя"
-            value={name}
+            value={values.name}
             name="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
         <div className="mb-6">
           <EmailInput
-            value={email}
+            value={values.email}
             name="email"
             placeholder="E-mail"
             isIcon={false}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
         <div className="mb-6">
           <PasswordInput
-            value={password}
+            value={values.password}
             name="password"
             placeholder="Пароль"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 

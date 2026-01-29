@@ -3,10 +3,10 @@ import {
   EmailInput,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+import { useForm } from '@hooks/useForm';
 import { loginUser } from '@services/user/actions';
 import { getUserLoading, getUserError } from '@services/user/reducer';
 
@@ -19,12 +19,11 @@ export const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange } = useForm({ email: '', password: '' });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }))
+    dispatch(loginUser({ email: values.email, password: values.password }))
       .unwrap()
       .then(() => {
         navigate(location.state?.from?.pathname || '/', { replace: true });
@@ -41,20 +40,20 @@ export const LoginPage = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className="mb-6">
           <EmailInput
-            value={email}
+            value={values.email}
             name="email"
             placeholder="E-mail"
             isIcon={false}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
         <div className="mb-6">
           <PasswordInput
-            value={password}
+            value={values.password}
             name="password"
             placeholder="Пароль"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
           />
         </div>
 
