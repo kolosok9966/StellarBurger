@@ -6,6 +6,7 @@ import {
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import {
   addSelectedIngredient,
@@ -15,6 +16,7 @@ import {
 import { incrementCount } from '@/services/ingredients/reducer';
 import { createOrder } from '@/services/order/actions';
 import { getOrderError, getOrderLoading } from '@/services/order/reducer';
+import { getUserData } from '@/services/user/reducer';
 import { DND_TYPES } from '@/utils/dnd-types';
 
 import { ConstructorIngredient } from './constructor-ingredient/constructor-ingredient';
@@ -23,6 +25,8 @@ import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = () => {
   const dispatch = useDispatch();
+  const user = useSelector(getUserData);
+  const navigate = useNavigate();
 
   const selectedBun = useSelector(getSelectedBun);
   const selectedIngredients = useSelector(getSelectedIngredients);
@@ -74,6 +78,11 @@ export const BurgerConstructor = () => {
     !selectedBun || selectedIngredients.length === 0 || orderLoading;
 
   const handleOrderClick = () => {
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
     const ingredientsIds = [
       selectedBun._id,
       ...selectedIngredients.map((item) => item._id),
