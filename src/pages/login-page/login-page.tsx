@@ -1,0 +1,94 @@
+import {
+  Button,
+  EmailInput,
+  PasswordInput,
+} from '@krgaa/react-developer-burger-ui-components';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useAppDispatch } from '@/hooks/use-app-dispatch';
+import { useAppLocation } from '@/hooks/use-app-location';
+import { useAppSelector } from '@/hooks/usea-app-selector';
+import { useForm } from '@hooks/useForm';
+import { loginUser } from '@services/user/actions';
+import { getUserLoading, getUserError } from '@services/user/reducer';
+
+import type { FC } from 'react';
+
+import styles from './login-page.module.css';
+
+export const LoginPage: FC = () => {
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector(getUserLoading);
+  const error = useAppSelector(getUserError);
+  const location = useAppLocation();
+  const navigate = useNavigate();
+
+  const { values, handleChange } = useForm({ email: '', password: '' });
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    dispatch(loginUser({ email: values.email, password: values.password }))
+      .unwrap()
+      .then(() => {
+        navigate(location.state?.from?.pathname || '/', { replace: true });
+      })
+      .catch(() => {
+        console.log('Ошибка');
+      });
+  };
+
+  return (
+    <main className={styles.container}>
+      <h2 className="text text_type_main-medium mb-6">Вход</h2>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className="mb-6">
+          <EmailInput
+            value={values.email}
+            name="email"
+            placeholder="E-mail"
+            isIcon={false}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="mb-6">
+          <PasswordInput
+            value={values.password}
+            name="password"
+            placeholder="Пароль"
+            onChange={handleChange}
+          />
+        </div>
+
+        {error && (
+          <p className="text text_type_main-small text_color_error mb-6">
+            Неверный email или пароль
+          </p>
+        )}
+
+        <div className="mb-20">
+          <Button htmlType="submit" type="primary" size="medium" disabled={loading}>
+            Войти
+          </Button>
+        </div>
+      </form>
+
+      <p className="text text_type_main-default text_color_inactive mb-4">
+        Вы — новый пользователь?{' '}
+        <Link to="/register" className={styles.link}>
+          Зарегистрироваться
+        </Link>
+      </p>
+
+      <p className="text text_type_main-default text_color_inactive">
+        Забыли пароль?{' '}
+        <Link to="/forgot-password" className={styles.link}>
+          Восстановить пароль
+        </Link>
+      </p>
+    </main>
+  );
+};
+
+export default LoginPage;
