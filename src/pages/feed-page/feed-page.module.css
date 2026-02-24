@@ -1,0 +1,24 @@
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.content {
+  display: flex;
+  gap: 60px;
+}
+
+.stats {
+  width: 580px;
+}
+
+.statusBlock {
+  display: flex;
+  gap: 36px;
+}
+
+.readyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

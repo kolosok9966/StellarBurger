@@ -1,0 +1,61 @@
+.wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.ingredients {
+  max-height: 312px;
+  padding-right: 8px;
+  overflow-y: auto;
+}
+
+.ingredient {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingredientInfo {
+  display: flex;
+  align-items: center;
+}
+
+.imageWrapper {
+  width: 64px;
+  height: 64px;
+  padding: 2px;
+  background: linear-gradient(40deg, #7722bf, #5343f1);
+  border-radius: 50%;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  background: #131316;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+}
+
+.statusPending {
+  color: #4ca8aa;
+}
+
+.statusCanceled {
+  color: #e52b1a;
+}

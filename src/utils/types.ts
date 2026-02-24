@@ -44,6 +44,26 @@ export type ResetPasswordPayload = {
   token: string;
 };
 
+export type Order = {
+  _id: string;
+  number: number;
+  name: string;
+  date: string;
+  status: OrderStatus;
+  ingredients: string[];
+  total: number;
+};
+
+export type OrderDetails = {
+  _id: string;
+  number: number;
+  status: 'done' | 'pending' | 'created';
+  createdAt: string;
+  ingredients: string[];
+};
+
+export type OrderStatus = 'done' | 'pending' | 'canceled';
+
 export type DropIngredient = Ingredient & { index: number };
 
 export type IngredientWithCount = Ingredient & { count: number };
