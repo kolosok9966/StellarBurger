@@ -62,6 +62,30 @@ export type OrderDetails = {
   ingredients: string[];
 };
 
+export type TOrder = {
+  ingredients: string[];
+  _id: string;
+  status: 'created' | 'pending' | 'done';
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TOrdersResponse = {
+  success: boolean;
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};
+
+export const WebsocketStatus = {
+  OFFLINE: 'OFFLINE',
+  CONNECTING: 'CONNECTING',
+  ONLINE: 'ONLINE',
+} as const;
+
+export type WebsocketStatus = (typeof WebsocketStatus)[keyof typeof WebsocketStatus];
+
 export type OrderStatus = 'done' | 'pending' | 'canceled';
 
 export type DropIngredient = Ingredient & { index: number };
