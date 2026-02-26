@@ -22,3 +22,14 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.columns {
+  display: flex;
+  gap: 24px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

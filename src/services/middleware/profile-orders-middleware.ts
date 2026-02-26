@@ -1,19 +1,27 @@
-import { ordersWsConnect, ordersWsDisconnect } from '../feed-orders/action';
 import {
-  wsConnecting,
-  wsOpen,
-  wsClose,
-  wsError,
-  wsMessage,
-} from '../feed-orders/reducer';
+  profileOrdersWsConnect,
+  profileOrdersWsDisconnect,
+} from '../profile-orders/action';
+import {
+  wsProfileOrdersConnecting,
+  wsProfileOrdersOpen,
+  wsProfileOrdersClose,
+  wsProfileOrdersError,
+  wsProfileOrdersMessage,
+} from '../profile-orders/reducer';
 import { socketMiddleware } from './soket-middleware';
 
-export const profileOrdersMiddleware = socketMiddleware({
-  connect: ordersWsConnect,
-  disconnect: ordersWsDisconnect,
-  onConnecting: wsConnecting,
-  onOpen: wsOpen,
-  onClose: wsClose,
-  onError: wsError,
-  onMessage: wsMessage,
-});
+import type { TOrdersResponse } from '@/utils/types';
+
+export const profileOrdersMiddleware = socketMiddleware<TOrdersResponse>(
+  {
+    connect: profileOrdersWsConnect,
+    disconnect: profileOrdersWsDisconnect,
+    onConnecting: wsProfileOrdersConnecting,
+    onOpen: wsProfileOrdersOpen,
+    onClose: wsProfileOrdersClose,
+    onError: wsProfileOrdersError,
+    onMessage: wsProfileOrdersMessage,
+  },
+  true
+);

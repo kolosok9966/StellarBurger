@@ -44,29 +44,12 @@ export type ResetPasswordPayload = {
   token: string;
 };
 
-export type Order = {
-  _id: string;
-  number: number;
-  name: string;
-  date: string;
-  status: OrderStatus;
-  ingredients: string[];
-  total: number;
-};
-
-export type OrderDetails = {
-  _id: string;
-  number: number;
-  status: 'done' | 'pending' | 'created';
-  createdAt: string;
-  ingredients: string[];
-};
-
 export type TOrder = {
   ingredients: string[];
   _id: string;
   status: 'created' | 'pending' | 'done';
   number: number;
+  name: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -78,6 +61,14 @@ export type TOrdersResponse = {
   totalToday: number;
 };
 
+export type OrdersState = {
+  status: WebsocketStatus;
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+  connectionError: string | null;
+};
+
 export const WebsocketStatus = {
   OFFLINE: 'OFFLINE',
   CONNECTING: 'CONNECTING',
@@ -85,8 +76,6 @@ export const WebsocketStatus = {
 } as const;
 
 export type WebsocketStatus = (typeof WebsocketStatus)[keyof typeof WebsocketStatus];
-
-export type OrderStatus = 'done' | 'pending' | 'canceled';
 
 export type DropIngredient = Ingredient & { index: number };
 

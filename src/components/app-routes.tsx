@@ -15,7 +15,6 @@ import { ProfilePage } from '@pages/profile-page/profile-page';
 import { ResetPasswordPage } from '@pages/reset-password-page/reset-password-page';
 
 import { Order } from './orders-list/order/order';
-import { OrdersList } from './orders-list/orders-list';
 
 import type { FC } from 'react';
 
@@ -72,7 +71,7 @@ export const AppRoutes: FC = () => {
           }
         >
           <Route index element={<ProfileForm />} />
-          <Route path="orders" element={<OrdersList />} />
+          {/*<Route path="orders" element={<OrdersList url={'/profile/orders'} orders={} />} />*/}
         </Route>
 
         {/* Страница ингредиента */}
@@ -80,6 +79,7 @@ export const AppRoutes: FC = () => {
 
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/feed/:id" element={<Order />} />
+        <Route path="profile/orders/:id" element={<Order />} />
       </Routes>
 
       {/* Модальное окно ингредиента */}
@@ -95,6 +95,14 @@ export const AppRoutes: FC = () => {
           />
           <Route
             path="/feed/:id"
+            element={
+              <Modal title={'Детали заказа'} handleClose={() => navigate(-1)}>
+                <Order />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:id"
             element={
               <Modal title={'Детали заказа'} handleClose={() => navigate(-1)}>
                 <Order />

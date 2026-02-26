@@ -2,7 +2,7 @@ import { checkResponse } from './checkResponse';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const getCookie = (name: string): string | undefined => {
+export const getCookie = (name: string): string | undefined => {
   const matches = document.cookie.match(
     new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[]\/+\\^])/g, '\\$1') + '=([^;]*)')
   );
@@ -13,7 +13,7 @@ const setCookie = (name: string, value: string): void => {
   document.cookie = `${name}=${value}`;
 };
 
-const refreshToken = async (): Promise<void> => {
+export const refreshToken = async (): Promise<void> => {
   const token = localStorage.getItem('refreshToken');
 
   const res = await fetch(`${API_BASE_URL}/auth/token`, {
