@@ -37,6 +37,9 @@ export const socketMiddleware = <MessageType = unknown>(
       const { dispatch } = store;
 
       if (connect.match(action)) {
+        if (socket) {
+          socket.close();
+        }
         url = action.payload;
         socket = new WebSocket(url);
         isConnected = true;
@@ -107,9 +110,11 @@ export const socketMiddleware = <MessageType = unknown>(
 
       if (disconnect.match(action)) {
         clearTimeout(reconnectTimer);
-        isConnected = false;
-        socket?.close();
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.close();
+        }
         socket = null;
+        isConnected = false;
       }
 
       return next(action);

@@ -8,6 +8,7 @@ const initialState: OrdersState = {
   orders: [],
   total: 0,
   totalToday: 0,
+  receivedMessage: false,
   connectionError: null,
 };
 
@@ -24,14 +25,16 @@ export const feedOrdersSlice = createSlice({
     },
     wsFeedOrdersClose(state) {
       state.status = WebsocketStatus.OFFLINE;
+      state.receivedMessage = false;
     },
     wsFeedOrdersError(state, action: PayloadAction<string>) {
       state.connectionError = action.payload;
     },
     wsFeedOrdersMessage(state, action: PayloadAction<TOrdersResponse>) {
+      state.receivedMessage = true;
       state.orders = action.payload.orders;
-      state.total = action.payload.total;
-      state.totalToday = action.payload.totalToday;
+      state.total = action.payload?.total ?? 0;
+      state.totalToday = action.payload?.totalToday ?? 0;
     },
   },
   selectors: {
@@ -48,13 +51,15 @@ export const feedOrdersSlice = createSlice({
       (state: OrdersState) => state.orders,
       (orders) =>
         orders
-          .filter((order) => order.status === 'pending')
+          .filter((order) => order.status === 'pending' || order.status === 'created')
           .slice(0, 20)
           .map((order) => order.number)
     ),
     getFeedTotal: (state) => state.total,
     getFeedTotalToday: (state) => state.totalToday,
     getFeedStatus: (state) => state.status,
+    getFeedConnectionError: (state) => state.connectionError,
+    getFeedReceivedMessage: (state) => state.receivedMessage,
   },
 });
 
@@ -73,6 +78,8 @@ export const {
   getFeedStatus,
   getFeedLastDoneOrders,
   getFeedLastPendingOrders,
+  getFeedConnectionError,
+  getFeedReceivedMessage,
 } = feedOrdersSlice.selectors;
 
 export default feedOrdersSlice.reducer;

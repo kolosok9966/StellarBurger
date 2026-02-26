@@ -2,14 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { request } from '@/utils/request';
 
-import type { TOrder } from '@/utils/types';
+import type { TOrdersResponse, TOrder, TOrderResponse } from '@/utils/types';
 
 import type { RootState } from '../store';
 
 export const createOrder = createAsyncThunk<TOrder, string[]>(
   'order/create',
   async (ingredientsIds) => {
-    const res = await request('/orders', {
+    const res = await request<TOrderResponse>('/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const fetchOrderIfNeeded = createAsyncThunk<TOrder, number, { state: Root
     );
     if (profileOrder) return profileOrder;
 
-    const res = await request(`/orders/${orderNumber}`);
+    const res = await request<TOrdersResponse>(`/orders/${orderNumber}`);
     return res.orders[0];
   }
 );

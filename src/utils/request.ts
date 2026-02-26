@@ -1,5 +1,7 @@
 import { checkResponse } from './checkResponse';
 
+import type { RefreshTokenResponse } from './types';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getCookie = (name: string): string | undefined => {
@@ -15,21 +17,18 @@ const setCookie = (name: string, value: string): void => {
 
 export const refreshToken = async (): Promise<void> => {
   const token = localStorage.getItem('refreshToken');
-
-  const res = await fetch(`${API_BASE_URL}/auth/token`, {
+  const res = await request<RefreshTokenResponse>('/auth/token', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token }),
-  }).then(checkResponse);
-
+  });
   setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
   localStorage.setItem('refreshToken', res.refreshToken);
 };
 
-export const request = async (
+export const request = async <T>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<Response> => {
+): Promise<T> => {
   const accessToken = getCookie('accessToken');
 
   const headers = {

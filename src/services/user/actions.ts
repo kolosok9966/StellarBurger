@@ -9,6 +9,8 @@ import type {
   UpdateUserPayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
+  AuthResponse,
+  UserResponse,
 } from '@/utils/types';
 
 const saveTokens = (accessToken: string, refreshToken: string): void => {
@@ -24,7 +26,7 @@ const clearTokens = (): void => {
 export const registerUser = createAsyncThunk<User, RegisterPayload>(
   'user/register',
   async ({ email, password, name }) => {
-    const res = await request('/auth/register', {
+    const res = await request<AuthResponse>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     });
@@ -36,7 +38,7 @@ export const registerUser = createAsyncThunk<User, RegisterPayload>(
 export const loginUser = createAsyncThunk<User, LoginPayload>(
   'user/login',
   async ({ email, password }) => {
-    const res = await request('/auth/login', {
+    const res = await request<AuthResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
@@ -57,14 +59,14 @@ export const logoutUser = createAsyncThunk<void>('user/logout', async () => {
 });
 
 export const getUser = createAsyncThunk<User>('user/get', async () => {
-  const res = await request('/auth/user');
+  const res = await request<UserResponse>('/auth/user');
   return res.user;
 });
 
 export const updateUser = createAsyncThunk<User, UpdateUserPayload>(
   'user/update',
   async ({ email, name, password }) => {
-    const res = await request('/auth/user', {
+    const res = await request<UserResponse>('/auth/user', {
       method: 'PATCH',
       body: JSON.stringify({ email, name, password }),
     });

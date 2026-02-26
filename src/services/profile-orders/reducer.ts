@@ -8,6 +8,7 @@ const initialState: OrdersState = {
   total: 0,
   totalToday: 0,
   connectionError: null,
+  receivedMessage: false,
 };
 
 export const profileOrdersSlice = createSlice({
@@ -22,15 +23,19 @@ export const profileOrdersSlice = createSlice({
       state.connectionError = null;
     },
     wsProfileOrdersClose(state) {
+      state.receivedMessage = false;
       state.status = WebsocketStatus.OFFLINE;
     },
     wsProfileOrdersError(state, action: PayloadAction<string>) {
       state.connectionError = action.payload;
     },
     wsProfileOrdersMessage(state, action: PayloadAction<TOrdersResponse>) {
-      state.orders = action.payload.orders;
-      state.total = action.payload.total;
-      state.totalToday = action.payload.totalToday;
+      state.receivedMessage = true;
+      state.orders = [...action.payload.orders].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      state.total = action.payload?.total ?? 0;
+      state.totalToday = action.payload?.totalToday ?? 0;
     },
   },
   selectors: {
@@ -38,6 +43,8 @@ export const profileOrdersSlice = createSlice({
     getProfileTotal: (state) => state.total,
     getProfileTotalToday: (state) => state.totalToday,
     getProfileStatus: (state) => state.status,
+    getProfileConnectionError: (state) => state.connectionError,
+    getProfileReceivedMessage: (state) => state.receivedMessage,
   },
 });
 
@@ -54,6 +61,8 @@ export const {
   getProfileTotal,
   getProfileTotalToday,
   getProfileStatus,
+  getProfileConnectionError,
+  getProfileReceivedMessage,
 } = profileOrdersSlice.selectors;
 
 export default profileOrdersSlice.reducer;

@@ -44,21 +44,50 @@ export type ResetPasswordPayload = {
   token: string;
 };
 
+export type RefreshTokenResponse = {
+  success: boolean;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type AuthResponse = {
+  success: boolean;
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type UserResponse = {
+  success: boolean;
+  user: User;
+};
+
+export type IngredientsResponse = {
+  success: boolean;
+  data: Ingredient[];
+};
+
 export type TOrder = {
   ingredients: string[];
   _id: string;
-  status: 'created' | 'pending' | 'done';
+  status: 'created' | 'pending' | 'done' | 'cancelled';
   number: number;
   name: string;
   createdAt: string;
   updatedAt: string;
+  price?: number;
+};
+
+export type TOrderResponse = {
+  success: boolean;
+  order: TOrder;
 };
 
 export type TOrdersResponse = {
   success: boolean;
   orders: TOrder[];
-  total: number;
-  totalToday: number;
+  total?: number;
+  totalToday?: number;
 };
 
 export type OrdersState = {
@@ -67,6 +96,7 @@ export type OrdersState = {
   total: number;
   totalToday: number;
   connectionError: string | null;
+  receivedMessage: boolean;
 };
 
 export const WebsocketStatus = {

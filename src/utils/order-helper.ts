@@ -14,6 +14,10 @@ export const STATUS_MAP = {
     text: 'Выполнен',
     color: '#ffffff',
   },
+  cancelled: {
+    text: 'Отменен',
+    color: '#ff0000',
+  },
 } as const;
 
 export const getStatusConfig = (
