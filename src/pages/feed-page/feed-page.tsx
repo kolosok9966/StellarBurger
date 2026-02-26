@@ -52,7 +52,7 @@ export const FeedPage: FC = () => {
 
         {/* RIGHT COLUMN — STATS */}
         <div className={styles.stats}>
-          <div className="mb-15">
+          <div className="mb-4">
             <div className={styles.statusBlock}>
               <div>
                 <p className="text text_type_main-medium mb-4">Готовы:</p>
@@ -85,7 +85,7 @@ export const FeedPage: FC = () => {
             </div>
           </div>
 
-          <div className="mb-15">
+          <div>
             <p className="text text_type_main-medium mb-2">Выполнено за все время:</p>
             <p className="text text_type_digits-large">{total}</p>
           </div>

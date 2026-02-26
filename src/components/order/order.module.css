@@ -51,11 +51,3 @@
   display: flex;
   align-items: center;
 }
-
-.statusPending {
-  color: #4ca8aa;
-}
-
-.statusCanceled {
-  color: #e52b1a;
-}

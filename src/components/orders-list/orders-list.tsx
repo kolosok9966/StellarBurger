@@ -11,9 +11,10 @@ import styles from './orders-list.module.css';
 type OrderListProps = {
   orders: TOrder[];
   url: string;
+  showStatus?: boolean;
 };
 
-export const OrdersList: FC<OrderListProps> = ({ orders, url }) => {
+export const OrdersList: FC<OrderListProps> = ({ orders, url, showStatus = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,8 +24,9 @@ export const OrdersList: FC<OrderListProps> = ({ orders, url }) => {
         <OrderCard
           key={order._id}
           order={order}
+          showStatus={showStatus}
           onClick={() =>
-            navigate(`${url}/${order._id}`, { state: { background: location } })
+            navigate(`${url}/${order.number}`, { state: { background: location } })
           }
         />
       ))}

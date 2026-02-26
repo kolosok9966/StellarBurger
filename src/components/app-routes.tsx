@@ -14,7 +14,8 @@ import { LoginPage } from '@pages/login-page/login-page';
 import { ProfilePage } from '@pages/profile-page/profile-page';
 import { ResetPasswordPage } from '@pages/reset-password-page/reset-password-page';
 
-import { Order } from './orders-list/order/order';
+import { HistoryOrders } from './history-orders/history-orders';
+import { Order } from './order/order';
 
 import type { FC } from 'react';
 
@@ -71,15 +72,22 @@ export const AppRoutes: FC = () => {
           }
         >
           <Route index element={<ProfileForm />} />
-          {/*<Route path="orders" element={<OrdersList url={'/profile/orders'} orders={} />} />*/}
+          <Route path="orders" element={<HistoryOrders />} />
         </Route>
 
         {/* Страница ингредиента */}
         <Route path="/ingredients/:id" element={<IngredientPage />} />
 
         <Route path="/feed" element={<FeedPage />} />
-        <Route path="/feed/:id" element={<Order />} />
-        <Route path="profile/orders/:id" element={<Order />} />
+        <Route path="/feed/:number" element={<Order />} />
+        <Route
+          path="profile/orders/:number"
+          element={
+            <ProtectedRoute>
+              <Order />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       {/* Модальное окно ингредиента */}
@@ -94,19 +102,21 @@ export const AppRoutes: FC = () => {
             }
           />
           <Route
-            path="/feed/:id"
+            path="/feed/:number"
             element={
-              <Modal title={'Детали заказа'} handleClose={() => navigate(-1)}>
+              <Modal handleClose={() => navigate(-1)}>
                 <Order />
               </Modal>
             }
           />
           <Route
-            path="/profile/orders/:id"
+            path="/profile/orders/:number"
             element={
-              <Modal title={'Детали заказа'} handleClose={() => navigate(-1)}>
-                <Order />
-              </Modal>
+              <ProtectedRoute>
+                <Modal handleClose={() => navigate(-1)}>
+                  <Order />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>
