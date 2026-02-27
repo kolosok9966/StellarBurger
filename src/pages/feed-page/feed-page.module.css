@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.title {
+  width: 70vw;
+  margin-left: 0;
+  padding-left: 0;
+  text-align: left;
+}
+
+.content {
+  display: flex;
+  gap: 60px;
+  max-width: 70vw;
+}
+
+.stats {
+  width: 580px;
+}
+
+.statusBlock {
+  display: flex;
+  gap: 36px;
+}
+
+.readyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.columns {
+  display: flex;
+  gap: 24px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

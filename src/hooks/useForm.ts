@@ -13,8 +13,6 @@ export function useForm<T extends Record<string, string | number | boolean>>(
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = event.target;
-
-    // если input type=checkbox или radio
     const newValue: string | number | boolean =
       type === 'checkbox' ? checked : type === 'number' ? Number(value) : value;
 

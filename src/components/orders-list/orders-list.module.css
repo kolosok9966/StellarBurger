@@ -1,0 +1,6 @@
+.orders {
+  flex: 1;
+  max-height: 75vh;
+  padding-right: 8px;
+  overflow-y: auto;
+}

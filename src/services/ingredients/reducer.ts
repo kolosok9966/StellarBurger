@@ -87,6 +87,28 @@ export const ingredientsSlice = createSlice({
   },
 });
 
+export const getIngredientsByIds = createSelector(
+  [
+    (state: IngredientsState): Ingredient[] => state.items,
+    (_: IngredientsState, ids: string[]): string[] => ids,
+  ],
+  (items: Ingredient[], ids: string[]): { ingredients: Ingredient[]; total: number } => {
+    const orderIngredients = ids
+      .map((id) => items.find((item) => item._id === id))
+      .filter((item): item is Ingredient => Boolean(item));
+
+    const total = orderIngredients.reduce(
+      (sum: number, item: Ingredient) => sum + item.price,
+      0
+    );
+
+    return {
+      ingredients: orderIngredients,
+      total,
+    };
+  }
+);
+
 export const {
   getIngredients,
   getIngredientsLoading,
