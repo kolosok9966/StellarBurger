@@ -15,14 +15,29 @@ const setCookie = (name: string, value: string): void => {
   document.cookie = `${name}=${value}`;
 };
 
-export const refreshToken = async (): Promise<void> => {
+export const refreshToken = async (): Promise<boolean> => {
   const token = localStorage.getItem('refreshToken');
-  const res = await request<RefreshTokenResponse>('/auth/token', {
+
+  if (!token) return false;
+
+  const res = await fetch(`${API_BASE_URL}/auth/token`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ token }),
   });
-  setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
-  localStorage.setItem('refreshToken', res.refreshToken);
+
+  if (!res.ok) return false;
+
+  const data: RefreshTokenResponse = await res.json();
+
+  if (!data.accessToken) return false;
+
+  setCookie('accessToken', data.accessToken.split('Bearer ')[1]);
+  localStorage.setItem('refreshToken', data.refreshToken);
+
+  return true;
 };
 
 export const request = async <T>(
@@ -37,25 +52,31 @@ export const request = async <T>(
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
   };
 
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+  let res = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
 
   if (res.status === 401) {
-    await refreshToken();
+    const refreshed = await refreshToken();
+
+    if (!refreshed) {
+      throw new Error('Unauthorized');
+    }
 
     const newAccessToken = getCookie('accessToken');
 
-    const retryRes = await fetch(`${API_BASE_URL}${endpoint}`, {
+    if (!newAccessToken) {
+      throw new Error('No access token after refresh');
+    }
+
+    res = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers: {
         ...headers,
         Authorization: `Bearer ${newAccessToken}`,
       },
     });
-
-    return checkResponse(retryRes);
   }
 
   return checkResponse(res);
