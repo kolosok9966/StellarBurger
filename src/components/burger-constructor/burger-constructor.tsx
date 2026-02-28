@@ -121,7 +121,11 @@ export const BurgerConstructor: FC = () => {
     <section className={styles.burger_constructor}>
       {/* Верхняя булка  */}
       {selectedBun ? (
-        <div ref={topBunDropRef} className={styles.lockedItem}>
+        <div
+          ref={topBunDropRef}
+          className={styles.lockedItem}
+          data-cy="constructor-bun-top"
+        >
           <ConstructorElement
             type="top"
             isLocked={true}
@@ -134,6 +138,7 @@ export const BurgerConstructor: FC = () => {
         <div
           ref={topBunDropRef}
           className={`${styles.placeholder} ${styles.top} ${isBunHover ? styles.hoverPlaceholder : ''}`}
+          data-cy="constructor-bun-top"
         >
           <p className="text text_type_main-default text_color_inactive">
             Выберите булки
@@ -142,7 +147,7 @@ export const BurgerConstructor: FC = () => {
       )}
 
       {/*  Начинки  */}
-      <div ref={ingredientsDropRef} className={styles.items}>
+      <div ref={ingredientsDropRef} className={styles.items} data-cy="constructor-items">
         {selectedIngredients.length > 0 ? (
           selectedIngredients.map((item, idx) => (
             <ConstructorIngredient key={item.uid} ingredient={item} index={idx} />

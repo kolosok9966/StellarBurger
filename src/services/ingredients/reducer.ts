@@ -61,7 +61,9 @@ export const ingredientsSlice = createSlice({
     decrementCount(state, action: { payload: Ingredient }) {
       const ingredient = action.payload;
       const item = state.items.find((i) => i._id === ingredient._id);
-      if (item && item.count !== undefined) item.count -= 1;
+      if (item && item.count !== undefined && item.count > 0) {
+        item.count -= 1;
+      }
     },
     clearCounts(state) {
       state.items.forEach((item) => {
@@ -89,8 +91,8 @@ export const ingredientsSlice = createSlice({
 
 export const getIngredientsByIds = createSelector(
   [
-    (state: IngredientsState): Ingredient[] => state.items,
-    (_: IngredientsState, ids: string[]): string[] => ids,
+    (state: { ingredients: IngredientsState }): Ingredient[] => state.ingredients.items,
+    (_: { ingredients: IngredientsState }, ids: string[]): string[] => ids,
   ],
   (items: Ingredient[], ids: string[]): { ingredients: Ingredient[]; total: number } => {
     const orderIngredients = ids
