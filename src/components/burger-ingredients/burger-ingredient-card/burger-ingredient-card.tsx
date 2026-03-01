@@ -38,7 +38,13 @@ export const BurgerIngredientCard: FC<BurgerIngredientCardProps> = ({ item }) =>
   };
 
   return (
-    <div ref={dragRef} className={styles.card} onClick={handleClick}>
+    <div
+      ref={dragRef}
+      className={styles.card}
+      onClick={handleClick}
+      data-cy="ingredient-card"
+      data-type={item.type}
+    >
       {item.count !== undefined && item.count > 0 && (
         <div className={styles.counter}>
           <Counter count={item.count} size="default" />
@@ -53,7 +59,12 @@ export const BurgerIngredientCard: FC<BurgerIngredientCardProps> = ({ item }) =>
           <CurrencyIcon type="primary" />
         </div>
 
-        <p className={`text text_type_main-default ${styles.name}`}>{item.name}</p>
+        <p
+          className={`text text_type_main-default ${styles.name}`}
+          data-cy="ingredient-name"
+        >
+          {item.name}
+        </p>
       </div>
     </div>
   );

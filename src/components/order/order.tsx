@@ -41,7 +41,7 @@ export const Order: FC = () => {
   }, [number, dispatch]);
 
   const { ingredients, total } = useAppSelector((state) =>
-    getIngredientsByIds(state.ingredients, order?.ingredients || [])
+    getIngredientsByIds(state, order?.ingredients || [])
   );
 
   const groupedIngredients = useMemo(() => {

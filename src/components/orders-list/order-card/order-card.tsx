@@ -21,7 +21,7 @@ type Props = {
 
 export const OrderCard: FC<Props> = ({ order, onClick, showStatus = false }) => {
   const { ingredients, total } = useAppSelector((state) =>
-    getIngredientsByIds(state.ingredients, order.ingredients)
+    getIngredientsByIds(state, order.ingredients)
   );
 
   const statusConfig = getStatusConfig(order.status);

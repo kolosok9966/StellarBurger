@@ -36,3 +36,4 @@
 		'@utils': path.resolve(__dirname, './src/utils'),
 	},
 ```
+Ссылка на сайт：https://kolosok9966.nomorepartiessite.ru/
